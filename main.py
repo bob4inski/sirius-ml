@@ -11,6 +11,8 @@ from sklearn.compose import ColumnTransformer # т.н. преобразоват�
 from sklearn.compose import TransformedTargetRegressor
 
 from sklearn.preprocessing import PowerTransformer  # Степенное преобразование от scikit-learn
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler #
 
 from sklearn.base import BaseEstimator, TransformerMixin # для создания собственных преобразователей / трансформеров данных
 
@@ -56,7 +58,6 @@ cat_columns = cat_and_nums(df)[0]
 # не забываем удалить целевую переменную цену из признаков
 X,y = df.drop(columns = ['final_result']), df['final_result']
 
-# разбиваем на тестовую и валидационную
 X_train, X_val, y_train, y_val = train_test_split(X, y,
                                                     test_size=0.8,
                                                     random_state=42)
@@ -71,10 +72,10 @@ preprocessors_all = ColumnTransformer(transformers=all_list)
 pipe_all_transform = Pipeline([
     ('preprocessors', preprocessors_all),
     ('model', TransformedTargetRegressor( regressor=SGDRegressor(random_state = 42),
-    transformer=PowerTransformer())
+    transformer=StandardScaler())
     )
 ])
-# print("-"*100)
-# print(all_list)
-print(pipe_all_transform)
-# pipe_all_transform.fit(X_train, y_train)
+
+Label = LabelEncoder()
+Label.fit(y) # задаем столбец, который хотим преобразовать
+Label.classes_ 
